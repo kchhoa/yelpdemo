@@ -7,6 +7,9 @@
       <%= @restaurant.name %>
     </h2>
 
+    <div class="star-rating" data-score= <%= @avg_rating %> ></div>
+    <p><%= "#{@reviews.length} reviews" %></p>
+
     <p>
       <strong>Address:</strong>
       <%= @restaurant.address %>
@@ -28,12 +31,22 @@
 
   <div class="col-md-9" >
     <% if @reviews.blank? %>
-      <h3>No review yet. Be the first to write one!</h3>
+    <h3>No review yet. Be the first to write one!</h3>
     <% else %>
-      <% @reviews.each do |review| %>
-        <div class="star-rating" data-score= <%= review.rating %> ></div>
-        <p><%= review.comment %></p>
-      <% end %>
+
+    <table class="table">
+      <tbody>
+        <% @reviews.each do |review| %>
+          <tr>
+            <td>
+              <div class="star-rating" data-score= <%= review.rating %> ></div>
+              <p><%= h(review.comment).gsub(/\n/, '<br/>').html_safe %></p>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
     <% end %>
   </div>
 
@@ -43,11 +56,11 @@
 <%= link_to 'Back', restaurants_path, class: "btn btn-link" %>
 
 <script>
-  $('.star-rating').raty({
-    path: 'https://s3-ap-northeast-1.amazonaws.com/yelpdemokaz/stars',
-    readOnly: true,
-    score: function() {
-      return $(this).attr('data-score');
-    }
-  });
+$('.star-rating').raty({
+  path: 'https://s3-ap-northeast-1.amazonaws.com/yelpdemokaz/stars',
+  readOnly: true,
+  score: function() {
+    return $(this).attr('data-score');
+  }
+});
 </script>
